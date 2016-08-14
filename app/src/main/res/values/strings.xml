@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Preaching Partner</string>
+    <string name="action_settings">Settings</string>
+    <string name="searchHint">Neutraility, Trinity</string>
+    <string name="action_search">Search Topics</string>
+    <string name="title_activity_topic_details"></string>
+</resources>
