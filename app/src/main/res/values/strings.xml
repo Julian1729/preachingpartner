@@ -4,4 +4,5 @@
     <string name="searchHint">Neutraility, Trinity</string>
     <string name="action_search">Search Topics</string>
     <string name="title_activity_topic_details"></string>
+    <string name="title_activity_topic_item_details">TopicItemDetails</string>
 </resources>

@@ -1,12 +1,15 @@
 package model;
 
+import java.io.Serializable;
+
 /**
  * Created by julian1729 on 7/27/16.
  */
-public class TopicItem {
+public class TopicItem implements Serializable{
 
     public String topic;
-    public String scripture;
+    public String scripCred;
+    public String scripText;
     public String comment;
     public int itemId;
 
@@ -18,12 +21,20 @@ public class TopicItem {
         this.topic = topic;
     }
 
-    public String getScripture() {
-        return scripture;
+    public String getScripCred() {
+        return scripCred;
     }
 
-    public void setScripture(String scripture) {
-        this.scripture = scripture;
+    public void setScripCred(String scripCred) {
+        this.scripCred = scripCred;
+    }
+
+    public String getScripText() {
+        return scripText;
+    }
+
+    public void setScripText(String scripText) {
+        this.scripText = scripText;
     }
 
     public String getComment() {

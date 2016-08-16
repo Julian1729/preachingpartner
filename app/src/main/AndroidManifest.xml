@@ -21,6 +21,10 @@
         <activity
             android:name=".TopicDetails"
             android:label="@string/title_activity_topic_details"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".TopicItemDetails"
+            android:label="@string/title_activity_topic_item_details"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

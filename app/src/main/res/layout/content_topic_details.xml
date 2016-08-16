@@ -11,25 +11,40 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.brotherapp.preachingpartner.TopicDetails"
     tools:showIn="@layout/activity_topic_details">
-    
-    <TextView
-        android:id="@+id/topicTitle"
-        android:text="Abortion"
-        android:textSize="35sp"
-        android:textColor="#555"
-        android:layout_marginTop="10dp"
+
+    <ViewSwitcher
+        android:id="@+id/topicTitleVS"
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/topicTitle"
+            android:text="Abortion"
+            android:textSize="35sp"
+            android:textColor="#555"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/renameTopicTitle"
+            android:textSize="35sp"
+            android:textColor="#555"
+            android:selectAllOnFocus="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+    </ViewSwitcher>
+
     
     <ListView
-        android:id="@+id/topicItemsList"
+        android:id="@+id/topicItemsLV"
         android:divider="#777"
         android:dividerHeight="1dp"
-        android:layout_below="@+id/topicTitle"
+        android:layout_below="@+id/topicTitleVS"
         android:layout_marginTop="15dp"
         android:layout_width="wrap_content"
-        android:background="@drawable/topic_item_bg"
-        android:layout_height="wrap_content"></ListView>
+        android:layout_height="wrap_content"/>
 
 </RelativeLayout>

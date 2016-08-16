@@ -17,18 +17,16 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import data.DatabaseHandler;
 import model.CustomDialog;
-import model.NoticeDialogFragment;
 
 public class MainActivity extends AppCompatActivity implements CustomDialog.SetupDialog{
 
     private DatabaseHandler dba;
-    //private ArrayList<TopicItem> topicItems = new ArrayList<>();
+
     private ListView topicLV;
     private ArrayList<String> dbTopics = new ArrayList<>();
     private TopicAdapter topicAdapter;
@@ -48,8 +46,8 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Setu
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogFragment dialog = new CustomDialog();
-                dialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
+                DialogFragment dialogFragment = new CustomDialog();
+                dialogFragment.show(getSupportFragmentManager(), "newtopic");
             }
         });
 
@@ -99,6 +97,12 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Setu
 
 
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshData();
     }
 
     @Override

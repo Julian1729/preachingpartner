@@ -7,9 +7,10 @@ public class Constants {
 
 
     public static final String DATABASE_NAME = "topics";
-    public static final int DATABASE_VERSION = 2;
-    public static final String GENERIC_TABLE_NAME = "Jehovah";
-    public static final String SCRIPTURE_COLUMN = "scripture";
+    public static final int DATABASE_VERSION = 3;
+    public static final String GENERIC_TABLE_NAME = "\"Jehovah\"";
+    public static final String SCRIPTURE_CRED = "scrip_cred";
+    public static final String SCRIPTURE_TEXT = "scrip_text";
     public static final String COMMENT_COLUMN = "comment";
     public static final String ID_COLUMN = "_id";
 

@@ -1,59 +1,52 @@
 package model;
 
-import android.app.Activity;
 import android.app.Dialog;
-import android.support.v4.app.DialogFragment;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Build;
+import android.graphics.Path;
 import android.os.Bundle;
-import android.support.design.widget.TextInputEditText;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.accessibility.AccessibilityManager;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.brotherapp.preachingpartner.MainActivity;
 import com.brotherapp.preachingpartner.R;
 
 import data.DatabaseHandler;
 
 /**
- * Created by julian1729 on 7/27/16.
+ * Created by julian1729 on 8/15/16.
  */
-public class CustomDialog extends DialogFragment {
+public class GenericDialogFragment extends DialogFragment{
 
-    //interface to pass call refreshData() from MainActivity
-    public interface SetupDialog{
-        //public void setOnOnDismissListener(DialogFragment dialogFragment);
-        public void callRefresh(DialogFragment dialogFragment);
+    public interface CallBack{
+        public void setTitle(String title);
+        public void setMessage(String message);
+        public void setIcon(Path path);
+        public void setPositiveButton(String text, DialogInterface.OnClickListener onClickListener);
+        public void setNegativeButton(String text, DialogInterface.OnClickListener onClickListener);
     }
 
-    SetupDialog setupDialog;
+    CallBack callBacks;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try{
-            setupDialog = (SetupDialog) context;
+            callBacks = (CallBack) context;
         }catch (ClassCastException e){
-            throw new ClassCastException(context.toString() + " must implement CustomDialog.SetupDialog");
+            throw new ClassCastException(context.toString() + " must implement ...");
         }
     }
 
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
         final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.text_dialog, null);
-        final EditText topicInput = (EditText) dialogView.findViewById(R.id.dialogET);
 
-        alert.setTitle("Add New Topic");
+        callBacks.setTitle(alert.setTitle());
         alert.setMessage("Enter a new topic");
         //alert.setView(inflater.inflate(R.layout.text_dialog, null));
         alert.setView(dialogView);
@@ -80,6 +73,5 @@ public class CustomDialog extends DialogFragment {
 
         return alert.create();
     }
-
 
 }
