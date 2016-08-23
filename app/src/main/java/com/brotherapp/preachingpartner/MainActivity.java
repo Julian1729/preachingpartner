@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Setu
     private TopicAdapter topicAdapter;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

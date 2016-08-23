@@ -3,12 +3,6 @@
     android:orientation="vertical" android:layout_width="match_parent" android:padding="12dp" android:background="@drawable/topic_item_bg"
     android:layout_height="match_parent">
 
-<LinearLayout
-    android:id="@+id/scriptureLayout"
-    android:orientation="horizontal"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
-
     <TextView
         android:id="@+id/scripCred"
         android:fontFamily="serif"
@@ -16,7 +10,11 @@
         android:textSize="12sp"
         android:textColor="@color/topicDetailsRow_White"
         android:textStyle="italic|bold"
-        android:layout_weight="0"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
@@ -27,14 +25,19 @@
         android:textSize="12sp"
         android:textColor="@color/topicDetailsRow_White"
         android:textStyle="bold"
+        android:textAlignment="center"
         android:ellipsize="end"
-        android:maxLines="2"
+        android:maxLines="3"
         android:requiresFadingEdge="vertical"
         android:fadingEdgeLength="100dp"
-        android:layout_weight="1"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/scripCred"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="10dp"
         android:layout_width="200dp"
         android:layout_height="wrap_content" />
-</LinearLayout>
 
     <TextView
         android:id="@+id/comment"
@@ -42,10 +45,26 @@
         android:textColor="@color/topicDetailsRow_White"
         android:textSize="13sp"
         android:fontFamily="serif"
-        android:maxLines="3"
+        android:maxLines="4"
         android:ellipsize="end"
-        android:layout_below="@+id/scriptureLayout"
+        android:layout_marginTop="0dp"
+        android:paddingBottom="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_below="@+id/scripText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <ImageButton
+        android:id="@+id/topicItemMenu"
+        android:background="@mipmap/ic_more_vert_white_18dp"
+        android:onClick="showMenu"
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="2dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"/>
 
 </RelativeLayout>

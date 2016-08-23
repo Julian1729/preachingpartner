@@ -8,7 +8,9 @@ import java.io.Serializable;
 public class TopicItem implements Serializable{
 
     public String topic;
-    public String scripCred;
+    public String scripBook;
+    public String scripChapter;
+    public String scripVerse;
     public String scripText;
     public String comment;
     public int itemId;
@@ -21,12 +23,28 @@ public class TopicItem implements Serializable{
         this.topic = topic;
     }
 
-    public String getScripCred() {
-        return scripCred;
+    public String getScripBook() {
+        return scripBook;
     }
 
-    public void setScripCred(String scripCred) {
-        this.scripCred = scripCred;
+    public void setScripBook(String scripBook) {
+        this.scripBook = scripBook;
+    }
+
+    public String getScripChapter() {
+        return scripChapter;
+    }
+
+    public void setScripChapter(String scripChapter) {
+        this.scripChapter = scripChapter;
+    }
+
+    public String getScripVerse() {
+        return scripVerse;
+    }
+
+    public void setScripVerse(String scripVerse) {
+        this.scripVerse = scripVerse;
     }
 
     public String getScripText() {

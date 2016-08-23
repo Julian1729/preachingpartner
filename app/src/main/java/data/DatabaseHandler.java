@@ -18,7 +18,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     private String createTableConclusion = " ("
             + Constants.ID_COLUMN + " INTEGER PRIMARY KEY, "
-            + Constants.SCRIPTURE_CRED + " TEXT, "
+            + Constants.SCRIPTURE_BOOK + " TEXT, "
+            + Constants.SCRIPTURE_CHAPTER + " TEXT, "
+            + Constants.SCRIPTURE_VERSE + " TEXT, "
             + Constants.SCRIPTURE_TEXT + " TEXT, "
             + Constants.COMMENT_COLUMN + " TEXT);";
 
@@ -30,7 +32,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         String CREATE_GENERIC_TABLE = "CREATE TABLE " + Constants.GENERIC_TABLE_NAME + " ("
                 + Constants.ID_COLUMN + " INTEGER PRIMARY KEY, "
-                + Constants.SCRIPTURE_CRED + " TEXT, "
+                + Constants.SCRIPTURE_BOOK + " TEXT, "
+                + Constants.SCRIPTURE_CHAPTER + " TEXT, "
+                + Constants.SCRIPTURE_VERSE + " TEXT, "
                 + Constants.SCRIPTURE_TEXT + " TEXT, "
                 + Constants.COMMENT_COLUMN + " TEXT);";
         sqLiteDatabase.execSQL(CREATE_GENERIC_TABLE);
@@ -85,11 +89,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         ContentValues cv = new ContentValues();
 
-        cv.put(Constants.SCRIPTURE_CRED, topicItem.getScripCred());
+        cv.put(Constants.SCRIPTURE_BOOK, topicItem.getScripBook());
+        cv.put(Constants.SCRIPTURE_CHAPTER, topicItem.getScripChapter());
+        cv.put(Constants.SCRIPTURE_VERSE, topicItem.getScripVerse());
         cv.put(Constants.SCRIPTURE_TEXT, topicItem.getScripText());
         cv.put(Constants.COMMENT_COLUMN, topicItem.getComment());
 
-        db.insert(topicItem.getTopic(), null, cv);
+        //here i needed to add quotations to the get item topic method in the topic item object
+        db.insert("\"" + topicItem.getTopic() + "\"", null, cv);
 
         Log.v("added topic row to db", "yesssss");
         db.close();
@@ -120,7 +127,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String preparedTopicQuery = "\"" + topic + "\"";
 
         Cursor c = db.query(preparedTopicQuery, new String[]{Constants.ID_COLUMN,
-                Constants.SCRIPTURE_CRED,
+                Constants.SCRIPTURE_BOOK,
+                Constants.SCRIPTURE_CHAPTER,
+                Constants.SCRIPTURE_VERSE,
                 Constants.SCRIPTURE_TEXT,
                 Constants.COMMENT_COLUMN}, null, null,null,null, Constants.ID_COLUMN + " DESC");
 
@@ -128,13 +137,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             do {
                 TopicItem tI = new TopicItem();
                 tI.setItemId(c.getInt(c.getColumnIndex(Constants.ID_COLUMN)));
-                tI.setScripCred(c.getString(c.getColumnIndex(Constants.SCRIPTURE_CRED)));
+                tI.setScripBook(c.getString(c.getColumnIndex(Constants.SCRIPTURE_BOOK)));
+                tI.setScripChapter(c.getString(c.getColumnIndex(Constants.SCRIPTURE_CHAPTER)));
+                tI.setScripVerse(c.getString(c.getColumnIndex(Constants.SCRIPTURE_VERSE)));
                 tI.setScripText(c.getString(c.getColumnIndex(Constants.SCRIPTURE_TEXT)));
                 tI.setComment(c.getString(c.getColumnIndex(Constants.COMMENT_COLUMN)));
                 topicItems.add(tI);
             }while(c.moveToNext());
         }
-        Log.v("got topics", "yessssss");
+
+        Log.v("got topics items", "yessssss");
 
         db.close();
         return topicItems;

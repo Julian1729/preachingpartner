@@ -2,6 +2,7 @@ package data;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.brotherapp.preachingpartner.R;
@@ -17,12 +19,20 @@ import com.brotherapp.preachingpartner.TopicItemDetails;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.GenericDialogFragment;
 import model.TopicItem;
+import utils.Utils;
 
 /**
  * Created by julian1729 on 8/15/16.
  */
 public class CustomListViewAdapter extends ArrayAdapter<TopicItem>{
+
+    public interface ListViewCallback{
+        public void setMenuButton(int itemId);
+    }
+
+    ListViewCallback listViewCallback = (ListViewCallback) getContext();
 
     private int layoutResource;
     private Activity activity;
@@ -68,15 +78,23 @@ public class CustomListViewAdapter extends ArrayAdapter<TopicItem>{
             holder.scripCred = (TextView) row.findViewById(R.id.scripCred);
             holder.scriptText = (TextView) row.findViewById(R.id.scripText);
             holder.comment = (TextView) row.findViewById(R.id.comment);
+            holder.menuButton = (ImageButton) row.findViewById(R.id.topicItemMenu);
             row.setTag(holder);
         }else{
             holder = (ViewHolder) row.getTag();
         }
 
         holder.topicItem = getItem(position);
-        holder.scripCred.setText(holder.topicItem.getScripCred());
+        holder.scripCred.setText("[ " +Utils.appendScripture(holder.topicItem.getScripBook(), holder.topicItem.getScripChapter(), holder.topicItem.getScripVerse()) + " ] - ");
         holder.scriptText.setText(holder.topicItem.getScripText());
         holder.comment.setText(holder.topicItem.getComment());
+        final ViewHolder finalHolder1 = holder;
+        holder.menuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listViewCallback.setMenuButton(finalHolder1.topicItem.getItemId());
+            }
+        });
 
         final ViewHolder finalHolder = holder;
         row.setOnClickListener(new View.OnClickListener() {
@@ -102,6 +120,7 @@ public class CustomListViewAdapter extends ArrayAdapter<TopicItem>{
         TextView scripCred;
         TextView scriptText;
         TextView comment;
+        ImageButton menuButton;
     }
 
 }

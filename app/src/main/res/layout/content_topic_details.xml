@@ -23,12 +23,15 @@
             android:text="Abortion"
             android:textSize="35sp"
             android:textColor="#555"
+            android:textAlignment="center"
+            android:ellipsize="marquee"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <EditText
             android:id="@+id/renameTopicTitle"
             android:textSize="35sp"
+            android:textAlignment="center"
             android:textColor="#555"
             android:selectAllOnFocus="true"
             android:layout_width="wrap_content"
@@ -40,10 +43,7 @@
     
     <ListView
         android:id="@+id/topicItemsLV"
-        android:divider="#777"
-        android:dividerHeight="1dp"
         android:layout_below="@+id/topicTitleVS"
-        android:layout_marginTop="15dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 

@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#70df6e</color>
-    <color name="colorPrimaryDark">#6ad268</color>
+    <color name="colorPrimary">#4087F2</color>
+    <color name="colorPrimaryDark">#4075F2</color>
     <color name="colorAccent">#7efff0</color>
 
     <color name="topicDetailsRow_White">#FFF</color>
     <color name="orange">#FF9B07</color>
+    <color name="brightBlue">#4087F2</color>
+    <color name="brightGreen">#70df6e</color>
+    <color name="darkGreen">#6ad268</color>
+    <color name="lightGrey">#CCCCCA</color>
+    <color name="white">#fff</color>
 </resources>

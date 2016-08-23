@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
@@ -12,16 +13,20 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDialog;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 //import android.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import org.w3c.dom.Text;
@@ -32,9 +37,10 @@ import java.util.zip.Inflater;
 import data.CustomListViewAdapter;
 import data.DatabaseHandler;
 import model.CustomDialog;
+import model.GenericDialogFragment;
 import model.TopicItem;
 
-public class TopicDetails extends AppCompatActivity{
+public class TopicDetails extends AppCompatActivity implements GenericDialogFragment.CallBack, CustomListViewAdapter.ListViewCallback, PopupMenu.OnMenuItemClickListener{
 
     private TextView topicTitle;
     private EditText topicRename;
@@ -54,7 +60,13 @@ public class TopicDetails extends AppCompatActivity{
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_18dp);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         topicTitle = (TextView) findViewById(R.id.topicTitle);
         topicRename = (EditText) findViewById(R.id.renameTopicTitle);
@@ -66,6 +78,10 @@ public class TopicDetails extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 //send user to new topic item activity
+                Intent i = new Intent(getApplicationContext(), AddTopicItem.class);
+                i.putExtra("topic", topicString);
+                startActivity(i);
+
             }
         });
 
@@ -94,16 +110,18 @@ public class TopicDetails extends AppCompatActivity{
 
         for (int i=0;i<topicItemsFromDb.size();i++){
 
-            String scripCred = topicItemsFromDb.get(i).getScripCred();
+            String scripBook = topicItemsFromDb.get(i).getScripBook();
+            String scripChapter = topicItemsFromDb.get(i).getScripChapter();
+            String scripVerse = topicItemsFromDb.get(i).getScripVerse();
             String scripText = topicItemsFromDb.get(i).getScripText();
             String comment = topicItemsFromDb.get(i).getComment();
             int itemId = topicItemsFromDb.get(i).getItemId();
 
-            Log.v("food id of " + String.valueOf(i), String.valueOf(itemId));
-
             holderItem = new TopicItem();
 
-            holderItem.setScripCred(scripCred);
+            holderItem.setScripBook(scripBook);
+            holderItem.setScripChapter(scripChapter);
+            holderItem.setScripVerse(scripVerse);
             holderItem.setScripText(scripText);
             holderItem.setComment(comment);
             holderItem.setItemId(itemId);
@@ -130,6 +148,10 @@ public class TopicDetails extends AppCompatActivity{
         //!!!!!!!!need to update in database and set the textview to new topic
     }
 
+
+
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.topic_details_menu, menu);
@@ -146,27 +168,8 @@ public class TopicDetails extends AppCompatActivity{
                 return true;
 
             case R.id.deleteTopicDetailsOption:
-                AlertDialog.Builder confirmDelete = new AlertDialog.Builder(getApplicationContext());
-                confirmDelete.setTitle("Are you sure?");
-                confirmDelete.setMessage("Are you sure you would like to delete " + topicString
-                        + " and all of its contents?");
-                confirmDelete.setIcon(android.R.drawable.ic_input_delete);
-                confirmDelete.setCancelable(true);
-                confirmDelete.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        //make a snackbar that allows an undo, when dismissed, execute deletion
-                        dba = new DatabaseHandler(getApplicationContext());
-                        dba.deleteTopic(new String[]{topicString});
-                        finish();
-                    }
-                });
-                confirmDelete.setNegativeButton("Cancel", null);
-                confirmDelete.create();
-                //fix this crap
-
-                confirmDelete.show();
-
+                DialogFragment confirmTopicDelete = new GenericDialogFragment();
+                confirmTopicDelete.show(getSupportFragmentManager(), "confirmDeleteDialog");
                 return true;
 
             default:
@@ -174,6 +177,73 @@ public class TopicDetails extends AppCompatActivity{
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshData();
+    }
 
+    @Override
+    public String setDialogMessage() {
+        String space = " ";
+        return getResources().getString(R.string.confirm_delte_dialog_message1) + space + topicString  + space + getResources().getString(R.string.confirm_delete_dialog_message2);
+    }
+
+    @Override
+    public int setDialogIcon() {
+        return android.R.drawable.ic_delete;
+    }
+
+    @Override
+    public String setTitle() {
+        return getResources().getString(R.string.confirm_delete_dialog_title);
+    }
+
+    @Override
+    public String setPositiveBtnText() {
+        return getResources().getString(R.string.dialog_positive_delete);
+    }
+
+    @Override
+    public String setNegativeBtnText() {
+        return getString(R.string.dialog_negative);
+    }
+
+    @Override
+    public DialogInterface.OnClickListener setPositiveButton() {
+        return new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //make a snackbar that allows an undo, when dismissed, execute deletion
+                        dba = new DatabaseHandler(getApplicationContext());
+                        dba.deleteTopic(new String[]{topicString});
+                        finish();
+            }
+        };
+    }
+
+    @Override
+    public DialogInterface.OnClickListener setNegativeButton() {
+        return null;
+    }
+
+    public void showMenu(){
+        PopupMenu popupMenu = new PopupMenu(this, );
+        popupMenu.setOnMenuItemClickListener(this);
+        popupMenu.inflate(R.menu.topic_item_row_popupmenu);
+        popupMenu.show();
+    }
+
+    @Override
+    public void setMenuButton(int itemId) {
+
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+
+
+        return false;
+    }
 }
 

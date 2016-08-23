@@ -6,6 +6,8 @@
     <EditText
         android:id="@+id/dialogET"
         android:hint="@string/searchHint"
+        android:maxLines="1"
+        android:singleLine="true"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_gravity="center_horizontal"

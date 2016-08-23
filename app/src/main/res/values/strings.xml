@@ -1,8 +1,17 @@
 <resources>
     <string name="app_name">Preaching Partner</string>
     <string name="action_settings">Settings</string>
-    <string name="searchHint">Neutraility, Trinity</string>
+    <string name="searchHint">Neutrality, Trinity</string>
     <string name="action_search">Search Topics</string>
     <string name="title_activity_topic_details"></string>
     <string name="title_activity_topic_item_details">TopicItemDetails</string>
+    <string name="confirm_delete_dialog_title">Confirm Delete</string>
+    <string name="confirm_delte_dialog_message1">Are you sure you want to delete </string>
+    <string name="confirm_delete_dialog_message2"> and all of its contents?</string>
+    <string name="dialog_negative">Cancel</string>
+    <string name="dialog_positive_delete">Delete</string>
+    <string name="title_activity_add_topic_item">AddTopicItem</string>
+    <string name="verse_input_hint">18 | 18,19 | 18-20</string>
+    <string name="comment_hint">Comment or Explanation</string>
+    <string name="addTopicItem_save">Save</string>
 </resources>
