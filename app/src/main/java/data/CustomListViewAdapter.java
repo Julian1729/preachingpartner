@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import com.brotherapp.preachingpartner.R;
 import com.brotherapp.preachingpartner.TopicItemDetails;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +31,8 @@ import utils.Utils;
 public class CustomListViewAdapter extends ArrayAdapter<TopicItem>{
 
     public interface ListViewCallback{
-        public void setMenuButton(int itemId);
+        public void setMenuButton(TopicItem topicItem, View view);
+        public String getTopicString();
     }
 
     ListViewCallback listViewCallback = (ListViewCallback) getContext();
@@ -88,15 +91,17 @@ public class CustomListViewAdapter extends ArrayAdapter<TopicItem>{
         holder.scripCred.setText("[ " +Utils.appendScripture(holder.topicItem.getScripBook(), holder.topicItem.getScripChapter(), holder.topicItem.getScripVerse()) + " ] - ");
         holder.scriptText.setText(holder.topicItem.getScripText());
         holder.comment.setText(holder.topicItem.getComment());
-        final ViewHolder finalHolder1 = holder;
+
+        final ViewHolder finalHolder = holder;
+
         holder.menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listViewCallback.setMenuButton(finalHolder1.topicItem.getItemId());
+                //listViewCallback.setMenuButton(finalHolder1.topicItem.getItemId(), view);
+                listViewCallback.setMenuButton(finalHolder.topicItem, view);
             }
         });
 
-        final ViewHolder finalHolder = holder;
         row.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -104,6 +109,7 @@ public class CustomListViewAdapter extends ArrayAdapter<TopicItem>{
                 Bundle b = new Bundle();
 
                 //serialize topicItem object and send to the next activity for extraction
+                finalHolder.topicItem.setTopic(listViewCallback.getTopicString());
                 b.putSerializable("topicItemObject", finalHolder.topicItem);
                 //send serialized object as extra through intent
                 i.putExtras(b);
@@ -121,6 +127,7 @@ public class CustomListViewAdapter extends ArrayAdapter<TopicItem>{
         TextView scriptText;
         TextView comment;
         ImageButton menuButton;
+        int itemId;
     }
 
 }

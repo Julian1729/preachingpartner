@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -31,16 +33,20 @@ import android.widget.ViewSwitcher;
 
 import org.w3c.dom.Text;
 
+import java.io.Serializable;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.zip.Inflater;
 
+import data.Constants;
 import data.CustomListViewAdapter;
 import data.DatabaseHandler;
+import model.ConfirmDeleteOfItem;
 import model.CustomDialog;
 import model.GenericDialogFragment;
 import model.TopicItem;
 
-public class TopicDetails extends AppCompatActivity implements GenericDialogFragment.CallBack, CustomListViewAdapter.ListViewCallback, PopupMenu.OnMenuItemClickListener{
+public class TopicDetails extends AppCompatActivity implements GenericDialogFragment.CallBack, CustomListViewAdapter.ListViewCallback, PopupMenu.OnMenuItemClickListener, ConfirmDeleteOfItem.Setter{
 
     private TextView topicTitle;
     private EditText topicRename;
@@ -52,6 +58,7 @@ public class TopicDetails extends AppCompatActivity implements GenericDialogFrag
     private CustomListViewAdapter customListViewAdapter;
     private String topicString;
 
+    private  TopicItem optionMenuTopicItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +108,7 @@ public class TopicDetails extends AppCompatActivity implements GenericDialogFrag
         });
     }
 
-    private void refreshData(){
+    public void refreshData(){
         TopicItem holderItem;
 
         dbTopicItems.clear();
@@ -116,6 +123,7 @@ public class TopicDetails extends AppCompatActivity implements GenericDialogFrag
             String scripText = topicItemsFromDb.get(i).getScripText();
             String comment = topicItemsFromDb.get(i).getComment();
             int itemId = topicItemsFromDb.get(i).getItemId();
+            String topic = topicItemsFromDb.get(i).getTopic();
 
             holderItem = new TopicItem();
 
@@ -125,6 +133,7 @@ public class TopicDetails extends AppCompatActivity implements GenericDialogFrag
             holderItem.setScripText(scripText);
             holderItem.setComment(comment);
             holderItem.setItemId(itemId);
+            holderItem.setTopic(topic);
             dbTopicItems.add(holderItem);
         }
 
@@ -145,8 +154,22 @@ public class TopicDetails extends AppCompatActivity implements GenericDialogFrag
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 
-        //!!!!!!!!need to update in database and set the textview to new topic
+        topicRename.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (!b){
+                    String newTopic = topicRename.getText().toString();
+                    String oldTopic = topicString;
+                    dba = new DatabaseHandler(getApplicationContext());
+                    dba.renameTopic(oldTopic, newTopic);
+                    viewSwitcher.showPrevious();
+                    topicString = newTopic;
+                    topicTitle.setText(topicString);
+                }
+            }
+        });
     }
+
 
 
 
@@ -170,6 +193,11 @@ public class TopicDetails extends AppCompatActivity implements GenericDialogFrag
             case R.id.deleteTopicDetailsOption:
                 DialogFragment confirmTopicDelete = new GenericDialogFragment();
                 confirmTopicDelete.show(getSupportFragmentManager(), "confirmDeleteDialog");
+                return true;
+
+            case R.id.openInWOL:
+                Intent openInWOL = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.WOL_SEARCH_TOPIC_URL + topicString));
+                startActivity(openInWOL);
                 return true;
 
             default:
@@ -227,23 +255,60 @@ public class TopicDetails extends AppCompatActivity implements GenericDialogFrag
         return null;
     }
 
-    public void showMenu(){
-        PopupMenu popupMenu = new PopupMenu(this, );
+
+    public void showMenu(View view){
+        PopupMenu popupMenu = new PopupMenu(this, view);
         popupMenu.setOnMenuItemClickListener(this);
         popupMenu.inflate(R.menu.topic_item_row_popupmenu);
         popupMenu.show();
     }
 
     @Override
-    public void setMenuButton(int itemId) {
+    public void setMenuButton(TopicItem topicItem, View view) {
+        showMenu(view);
+        optionMenuTopicItem = topicItem;
+    }
 
+    @Override
+    public String getTopicString() {
+        return topicString;
     }
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
 
+        switch (item.getItemId()){
+
+            case R.id.deleteTopicItem_option:
+                DialogFragment confirmItemDelete = new ConfirmDeleteOfItem();
+                confirmItemDelete.show(getSupportFragmentManager(), "confirmItemDelete");
+                refreshData();
+                return true;
+            case R.id.editTopicItem_option:
+                Intent i = new Intent(getApplicationContext(), AddTopicItem.class);
+                Bundle b = new Bundle();
+                optionMenuTopicItem.setTopic(topicString);
+                b.putSerializable("topicItem", optionMenuTopicItem);
+                i.putExtras(b);
+                startActivity(i);
+                return true;
+        }
 
         return false;
     }
+
+
+    @Override
+    public void setPositive(DialogInterface.OnClickListener onClickListener) {
+        dba = new DatabaseHandler(getApplicationContext());
+        dba.deleteRow(topicString, optionMenuTopicItem.getItemId());
+        dba.close();
+        refreshData();
+    }
+
+
 }
+
+
+
 

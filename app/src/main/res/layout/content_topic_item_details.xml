@@ -12,4 +12,35 @@
     tools:context="com.brotherapp.preachingpartner.TopicItemDetails"
     tools:showIn="@layout/activity_topic_item_details">
 
+    <TextView
+        android:id="@+id/scriptureTV_ItemTopicDetails"
+        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1 Timothy 3:16"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/scriptureTextTV_ItemTopicDetails"
+        android:textSize="18sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="All scripture is inspired by God, and beneficial for teaching, reproving"
+        android:layout_below="@+id/scriptureTV_ItemTopicDetails"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#555"
+        android:text="This shows taht everything written in the bible is from God and is benefiecial for us and many more things"
+        android:id="@+id/commentTV_ItemTopicDetails"
+        android:layout_centerVertical="true"
+        android:layout_below="@id/scriptureTextTV_ItemTopicDetails"/>
 </RelativeLayout>

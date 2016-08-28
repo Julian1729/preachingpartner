@@ -102,6 +102,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+
     public ArrayList<String> getTopics(){
         ArrayList<String> topics = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();

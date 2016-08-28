@@ -12,7 +12,12 @@
 
         <item
             android:id="@+id/deleteTopicDetailsOption"
-            android:title="Delete"
+            android:title="Delete Topic"
+            android:visible="true"
+            android:enabled="true"/>
+        <item
+            android:id="@+id/openInWOL"
+            android:title="@string/openonline"
             android:visible="true"
             android:enabled="true"/>
 

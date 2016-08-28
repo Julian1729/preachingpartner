@@ -41,6 +41,8 @@ public class AddTopicItem extends AppCompatActivity {
     //do these have to be initiated??
     String scripBook, scripChapter, scripVerse;
 
+    TopicItem bundledTopicItem = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,6 +122,23 @@ public class AddTopicItem extends AppCompatActivity {
         });
 
 
+        if (getIntent().getSerializableExtra("topicItem") != null){
+            bundledTopicItem = (TopicItem) getIntent().getSerializableExtra("topicItem");
+
+            String bundledBibleBook = bundledTopicItem.getScripBook();
+            String bundledBibleChapter = bundledTopicItem.getScripChapter();
+            String bundledBibleVerse = bundledTopicItem.getScripVerse();
+            String bundledBibleText = bundledTopicItem.getScripText();
+            String bundledComment = bundledTopicItem.getComment();
+
+            scriptureET.setText(bundledBibleBook);
+            scriptureChapter.setText(bundledBibleChapter);
+            scriptureVerse.setText(bundledBibleVerse);
+            scriptureText.setText(bundledBibleText);
+            comment.setText(bundledComment);
+        }else{
+
+        }
 
 
 
@@ -174,27 +193,45 @@ public class AddTopicItem extends AppCompatActivity {
         item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                Toast.makeText(getApplicationContext(), "test", Toast.LENGTH_LONG).show();
-                String bibleBook = scriptureET.getText().toString().trim();
-                String bibleChapter = scriptureChapter.getText().toString().trim();
-                String bibleVerse = scriptureVerse.getText().toString().trim();
-                String bibleText = scriptureText.getText().toString().trim();
-                String userComment = comment.getText().toString().trim();
+                if (bundledTopicItem == null) {
+                    String bibleBook = scriptureET.getText().toString().trim();
+                    String bibleChapter = scriptureChapter.getText().toString().trim();
+                    String bibleVerse = scriptureVerse.getText().toString().trim();
+                    String bibleText = scriptureText.getText().toString().trim();
+                    String userComment = comment.getText().toString().trim();
 
-                TopicItem topicItem = new TopicItem();
-                topicItem.setScripBook(bibleBook);
-                topicItem.setScripChapter(bibleChapter);
-                topicItem.setScripVerse(bibleVerse);
-                topicItem.setScripText(bibleText);
-                topicItem.setComment(userComment);
+                    TopicItem topicItem = new TopicItem();
+                    topicItem.setScripBook(bibleBook);
+                    topicItem.setScripChapter(bibleChapter);
+                    topicItem.setScripVerse(bibleVerse);
+                    topicItem.setScripText(bibleText);
+                    topicItem.setComment(userComment);
+                    topicItem.setTopic(getIntent().getStringExtra("topic"));
 
-                Bundle b = getIntent().getExtras();
+                    Bundle b = getIntent().getExtras();
 
-                topicItem.setTopic(b.getString("topic"));
+                    topicItem.setTopic(b.getString("topic"));
 
-                DatabaseHandler dba = new DatabaseHandler(getApplicationContext());
-                dba.addRow(topicItem);
+                    DatabaseHandler dba = new DatabaseHandler(getApplicationContext());
+                    dba.addRow(topicItem);
+                }else{
+                    if (bundledTopicItem.getScripBook() != scriptureET.getText().toString() ||
+                            bundledTopicItem.getScripChapter() != scriptureChapter.getText().toString() ||
+                            bundledTopicItem.getScripVerse() != scriptureVerse.getText().toString() ||
+                            bundledTopicItem.getComment() != comment.getText().toString()){
+                        TopicItem newItem = new TopicItem();
+                        newItem.setScripBook(scriptureET.getText().toString());
+                        newItem.setScripChapter(scriptureChapter.getText().toString());
+                        newItem.setScripVerse(scriptureVerse.getText().toString());
+                        newItem.setScripText(scriptureText.getText().toString());
+                        newItem.setComment(comment.getText().toString());
+                        newItem.setTopic(bundledTopicItem.getTopic());
 
+                        DatabaseHandler dba = new DatabaseHandler(getApplicationContext());
+                        dba.deleteRow(bundledTopicItem.getTopic(), bundledTopicItem.getItemId());
+                        dba.addRow(newItem);
+                    }
+                }
                 finish();
                 return true;
             }

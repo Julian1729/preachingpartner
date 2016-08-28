@@ -40,9 +40,6 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Setu
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //Log.v("topic 2", dba.getTopics().get(0));
-
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.addTopicFAB);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
